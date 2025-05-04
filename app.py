@@ -91,7 +91,8 @@ def index():
         "WHERE user_id=? ORDER BY timestamp DESC LIMIT ?",
         (session['user_id'], MAX_HISTORY)
     ).fetchall()
-    return render_template('index.html', history=rows)
+    default_icon_path = 'rscrs/icon.png'
+    return render_template('index.html', history=rows, icon=default_icon_path)
 
 @app.route('/predict', methods=['POST'])
 @login_required
