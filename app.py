@@ -185,7 +185,14 @@ def predict():
         preds = model.predict(preprocess(abs_path))[0]
         idx = int(np.argmax(preds))
         conf = float(preds[idx] * 100)
-        label = CLASS_LABELS[idx]
+        
+        # Add confidence threshold check
+        confidence_threshold = 70.0  # Adjust this value based on testing
+        if conf < confidence_threshold:
+            label = "Not a leaf or unrecognized"
+        else:
+            label = CLASS_LABELS[idx]
+            
         app.logger.info(f"Prediction: {label}, Confidence: {conf}%")
     except Exception as e:
         app.logger.error(f"Error during prediction: {str(e)}")
@@ -299,6 +306,10 @@ def delete_user(user_id):
         get_db().commit()
         flash('Deleted', 'info')
     return redirect(url_for('admin'))
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
